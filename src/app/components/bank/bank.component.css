@@ -1,0 +1,16 @@
+.component {
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    padding: 20px 20px;
+    flex-direction: column;
+}
+
+app-conversion,
+app-exchange-rate {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.component > div:last-child {
+    margin-bottom: 0;
+}

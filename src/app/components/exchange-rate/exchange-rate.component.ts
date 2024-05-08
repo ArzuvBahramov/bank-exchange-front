@@ -8,7 +8,7 @@ import {ExchangeRateService} from "../../services/data/exchange-rate/exchange-ra
   styleUrl: './exchange-rate.component.css'
 })
 export class ExchangeRateComponent {
-  displayedColumns: string[] = ['index', 'code', 'rate'];
+  displayedColumns: string[] = ['index', 'code', 'rate', 'rate_date'];
   dataSource: ExchangeRate[] = [];
   constructor(private exchangeRateService: ExchangeRateService) {
     this.loadData();
