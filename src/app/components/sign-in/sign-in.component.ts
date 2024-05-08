@@ -5,6 +5,7 @@ import {LoginRequest} from "../../model/request/login.request";
 import {BehaviorSubject} from "rxjs";
 import {TokenService} from "../../services/token/token.service";
 import {Router} from "@angular/router";
+import {AppComponent} from "../../app.component";
 
 @Component({
   selector: 'app-sign-in',
@@ -18,6 +19,7 @@ export class SignInComponent {
   constructor(private fb: FormBuilder,
               private authDataService: AuthDataService,
               private authService: TokenService,
+              private app: AppComponent,
               private router: Router) {
     this.signInForm = this.fb.group({
       username: new FormControl('', [Validators.required]),
@@ -35,6 +37,7 @@ export class SignInComponent {
       this.authDataService.signIn(loginRequest).subscribe({
         next: (response) => {
           this.authService.login(response);
+          this.app.loadUserDetails();
           this.router.navigate(['/app'])
         },
         error: (error) => {

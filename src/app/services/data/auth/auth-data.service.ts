@@ -27,8 +27,8 @@ export class AuthDataService {
     return this.http.get(`${this.apiUrl}/refresh-token`);
   }
 
-  getDetails(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/api/details`);
+  getDetails(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/api/details`);
   }
 }
 
