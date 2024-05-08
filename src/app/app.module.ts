@@ -23,6 +23,7 @@ import {
     MatHeaderRowDef, MatRow, MatRowDef,
     MatTable
 } from "@angular/material/table";
+import { ConversionComponent } from './components/conversion/conversion.component';
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -30,7 +31,8 @@ import {
     AppComponent,
     SignInComponent,
     SignUpComponent,
-    ExchangeRateComponent
+    ExchangeRateComponent,
+    ConversionComponent
   ],
     imports: [
         HttpClientModule,
