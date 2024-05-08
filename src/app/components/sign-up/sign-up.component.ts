@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthDataService} from "../../services/data/auth/auth-data.service";
-import {AuthService} from "../../services/auth/auth.service";
+import {TokenService} from "../../services/token/token.service";
 import {Router} from "@angular/router";
-import {LoginRequest} from "../../model/request/login.request";
 import {RegisterRequest} from "../../model/request/register.request";
 
 @Component({
@@ -17,7 +16,7 @@ export class SignUpComponent {
 
   constructor(private fb: FormBuilder,
               private authDataService: AuthDataService,
-              private authService: AuthService,
+              private authService: TokenService,
               private router: Router) {
     this.signUpForm = this.fb.group({
       firstname: new FormControl(''),
