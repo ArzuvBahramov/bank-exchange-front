@@ -7,7 +7,7 @@ import {environment} from "../../../../envirement/envirement";
   providedIn: 'root'
 })
 export class ConversionService {
-  private apiUrl = environment.apiUrl + '/conversion';
+  private apiUrl = `${environment.apiUrl}${environment.prefix}/conversion`;
 
   constructor(private http: HttpClient) { }
 

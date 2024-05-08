@@ -13,26 +13,47 @@ import {MatCard, MatCardContent} from "@angular/material/card";
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./services/interceptor/auth.interceptor";
 import { SignUpComponent } from './components/sign-up/sign-up.component';
+import { ExchangeRateComponent } from './components/exchange-rate/exchange-rate.component';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef, MatHeaderRow,
+    MatHeaderRowDef, MatRow, MatRowDef,
+    MatTable
+} from "@angular/material/table";
 
 @NgModule({
   bootstrap: [AppComponent],
   declarations: [
     AppComponent,
     SignInComponent,
-    SignUpComponent
+    SignUpComponent,
+    ExchangeRateComponent
   ],
-  imports: [
-    HttpClientModule,
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-    MatButtonModule,
-    MatInputModule,
-    AppRoutingModule,
-    MatCardContent,
-    MatCard
-  ],
+    imports: [
+        HttpClientModule,
+        BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatInputModule,
+        AppRoutingModule,
+        MatCardContent,
+        MatCard,
+        MatTable,
+        MatHeaderCell,
+        MatCell,
+        MatCellDef,
+        MatHeaderCellDef,
+        MatColumnDef,
+        MatHeaderRowDef,
+        MatRow,
+        MatHeaderRow,
+        MatRowDef
+    ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     provideAnimationsAsync()
