@@ -1,11 +1,37 @@
-<div class="text-center">
-  <h4>Login form with Validation using Angular Material</h4>
-  <form [formGroup]="signInForm" (ngSubmit)="onSubmit()" novalidate>
-    <div class="example-container">
+<div>
+  <form [formGroup]="signInForm" (ngSubmit)="onSubmit()" novalidate class="d-flex-center">
+    <div>
+      <div>
+        <div class="example-label">Login</div>
+      </div>
       <div>
         <mat-form-field>
-          <input matInput placeholder="Username">
+          <input matInput placeholder="Username" formControlName="username">
+          <mat-error *ngIf="signInForm.get('username')?.invalid &&
+                (signInForm.get('username')?.dirty ||
+                signInForm.get('username')?.touched)">
+            Username is required
+          </mat-error>
         </mat-form-field>
+      </div>
+      <div class="mt-top-2">
+        <mat-form-field>
+          <input matInput type="password" placeholder="Password" formControlName="password">
+          <mat-error *ngIf="signInForm.get('password')?.invalid &&
+                (signInForm.get('password')?.dirty || signInForm.get('password')?.touched)">
+            Password is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="mt-top">
+        <div class="example-button-row">
+          <button [disabled]="!signInForm.valid" type="submit" mat-raised-button color="primary">Sign In</button>
+          <a mat-raised-button href="/Sign Up">Sign Up</a>
+        </div>
+      </div>
+
+      <div *ngIf="isNotValidCredentials">
+        <div class="example-label">The Credentials is not valid</div>
       </div>
     </div>
   </form>

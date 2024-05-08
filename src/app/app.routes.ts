@@ -1,20 +1,22 @@
 import { Routes } from '@angular/router';
 import {SignInComponent} from "./components/sign-in/sign-in.component";
-import {authGuard} from "./guards/guard/auth.guard";
+import {AuthGuardService} from "./guards/guard/auth.guard";
+import {AppComponent} from "./app.component";
 
 export const routes: Routes = [
   {
     path: '',
-    canActivate: [authGuard],
-    children: [
-      {
-        path: '',
-        redirectTo: '/login',
-        pathMatch: 'full'
-      }
-    ]
+    redirectTo: '/login',
+    pathMatch: 'full'
   },
   {
-    path: 'login', component: SignInComponent
+    path: 'app',
+    component: AppComponent,
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'login',
+    component: SignInComponent
   }
 ];
+

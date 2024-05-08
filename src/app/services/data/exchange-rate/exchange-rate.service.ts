@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {ExchangeRate} from "../../model/exchange-rate.model";
-import {environment} from "../../../envirement/envirement";
+import {ExchangeRate} from "../../../model/exchange-rate.model";
+import {environment} from "../../../../envirement/envirement";
 
 @Injectable({
   providedIn: 'root'
