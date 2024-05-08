@@ -24,6 +24,9 @@ import {
     MatTable
 } from "@angular/material/table";
 import { ConversionComponent } from './components/conversion/conversion.component';
+import { BankComponent } from './components/bank/bank.component';
+import {MatIcon} from "@angular/material/icon";
+import {MatToolbar} from "@angular/material/toolbar";
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -32,7 +35,8 @@ import { ConversionComponent } from './components/conversion/conversion.componen
     SignInComponent,
     SignUpComponent,
     ExchangeRateComponent,
-    ConversionComponent
+    ConversionComponent,
+    BankComponent
   ],
     imports: [
         HttpClientModule,
@@ -54,7 +58,9 @@ import { ConversionComponent } from './components/conversion/conversion.componen
         MatHeaderRowDef,
         MatRow,
         MatHeaderRow,
-        MatRowDef
+        MatRowDef,
+        MatIcon,
+        MatToolbar
     ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

@@ -1,4 +1,8 @@
 <div>
+    <div class="mat-typography">
+        <p class="mat-body-1">Converter</p>
+    </div>
+
     <form [formGroup]="formConversionRequest" (ngSubmit)="onSubmit()" novalidate class="d-flex-center">
         <div>
             <mat-form-field hintLabel="Max 3 characters">
@@ -22,16 +26,14 @@
 
             <mat-form-field>
                 <mat-label>Result</mat-label>
-                <input matInput type="number" class="example-right-align" placeholder="0" formControlName="toValue" >
+                <input matInput type="number" class="example-right-align" placeholder="0" formControlName="toValue" [readonly]>
                 <span matTextPrefix>$&nbsp;</span>
-                <span matTextSuffix>.000</span>
             </mat-form-field>
 
             <div class="example-button-row">
                 <button mat-raised-button color="primary" type="submit">Convert</button>
-            </div>
-            <div class="example-button-row">
-                <button mat-raised-button type="button">History</button>
+                <a mat-raised-button type="button">History</a>
+<!--                href="/sign-up"-->
             </div>
         </div>
     </form>

@@ -31,8 +31,8 @@ export class ConversionComponent {
 
       this.conversionService.convert(conversionRequest).subscribe({
         next: (response) => {
-          // let result = response.toValue;
-          // this.formConversionRequest.setValue('toValue', result);
+          let result = response.toValue;
+          this.formConversionRequest.get('toValue')?.setValue(result);
         },
         error: (err) => {
           // console.log(err);
