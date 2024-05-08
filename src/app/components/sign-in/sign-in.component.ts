@@ -3,7 +3,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthDataService} from "../../services/data/auth/auth-data.service";
 import {LoginRequest} from "../../model/request/login.request";
 import {BehaviorSubject} from "rxjs";
-import {AuthService} from "../../services/auth/auth.service";
+import {TokenService} from "../../services/token/token.service";
 import {Router} from "@angular/router";
 
 @Component({
@@ -17,7 +17,7 @@ export class SignInComponent {
 
   constructor(private fb: FormBuilder,
               private authDataService: AuthDataService,
-              private authService: AuthService,
+              private authService: TokenService,
               private router: Router) {
     this.signInForm = this.fb.group({
       username: new FormControl('', [Validators.required]),

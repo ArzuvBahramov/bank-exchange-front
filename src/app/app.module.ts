@@ -27,6 +27,7 @@ import { ConversionComponent } from './components/conversion/conversion.componen
 import { BankComponent } from './components/bank/bank.component';
 import {MatIcon} from "@angular/material/icon";
 import {MatToolbar} from "@angular/material/toolbar";
+import {MatPaginator} from "@angular/material/paginator";
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -36,7 +37,7 @@ import {MatToolbar} from "@angular/material/toolbar";
     SignUpComponent,
     ExchangeRateComponent,
     ConversionComponent,
-    BankComponent
+    BankComponent,
   ],
     imports: [
         HttpClientModule,
@@ -60,7 +61,8 @@ import {MatToolbar} from "@angular/material/toolbar";
         MatHeaderRow,
         MatRowDef,
         MatIcon,
-        MatToolbar
+        MatToolbar,
+        MatPaginator
     ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
