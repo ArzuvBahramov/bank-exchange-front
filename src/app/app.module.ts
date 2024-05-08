@@ -12,12 +12,14 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import {MatCard, MatCardContent} from "@angular/material/card";
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./services/interceptor/auth.interceptor";
+import { SignUpComponent } from './components/sign-up/sign-up.component';
 
 @NgModule({
   bootstrap: [AppComponent],
   declarations: [
     AppComponent,
-    SignInComponent
+    SignInComponent,
+    SignUpComponent
   ],
   imports: [
     HttpClientModule,
