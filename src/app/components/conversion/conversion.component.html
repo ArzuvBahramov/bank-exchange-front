@@ -5,18 +5,24 @@
 
     <form [formGroup]="formConversionRequest" (ngSubmit)="onSubmit()" novalidate class="d-flex-center">
         <div>
-            <mat-form-field hintLabel="Max 3 characters">
+            <mat-form-field class="example-full-width" hintLabel="Max 3 characters">
                 <mat-label>From</mat-label>
-                <input matInput #input maxlength="3" placeholder="From" formControlName="currencyFrom">
-                <mat-hint align="end">{{input.value.length}}/3</mat-hint>
+                <input matInput [matAutocomplete]="from" #input maxlength="3" placeholder="USD" formControlName="currencyFrom">
+                <mat-autocomplete #from="matAutocomplete">
+                    <mat-option *ngFor="let option of fromReqFilteredOptions | async" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
             </mat-form-field>
-
-            <mat-form-field hintLabel="Max 3 characters">
+            <mat-form-field class="example-full-width" hintLabel="Max 3 characters">
                 <mat-label>To</mat-label>
-                <input matInput #input maxlength="3" placeholder="To" formControlName="currencyTo">
-                <mat-hint align="end">{{input.value.length}}/3</mat-hint>
+                <input matInput [matAutocomplete]="to" #input maxlength="3" placeholder="To" formControlName="currencyTo">
+                <mat-autocomplete #to="matAutocomplete">
+                    <mat-option *ngFor="let option of toReqFilteredOptions | async" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
             </mat-form-field>
-
             <mat-form-field>
                 <mat-label>Amount</mat-label>
                 <input matInput type="number" class="example-right-align" placeholder="0" formControlName="fromValue">
@@ -46,17 +52,27 @@
             <form [formGroup]="filterRequest" (ngSubmit)="onSubmitFilter()" novalidate class="d-flex-center">
                 <div>
                     <div>
-                        <mat-form-field hintLabel="Max 3 characters" class="filter-field">
+                        <mat-form-field class="example-full-width filter-field" hintLabel="Max 3 characters">
                             <mat-label>from currency</mat-label>
-                            <input matInput #input maxlength="3" placeholder="USD" formControlName="from">
+                            <input matInput [matAutocomplete]="from" #input maxlength="3" placeholder="USD" formControlName="from">
                             <mat-hint align="end">{{input.value.length}}/3</mat-hint>
+                            <mat-autocomplete #from="matAutocomplete">
+                                <mat-option *ngFor="let option of fromSearchFilteredOptions | async" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
                         </mat-form-field>
                     </div>
                     <div>
-                        <mat-form-field hintLabel="Max 3 characters" class="filter-field">
+                        <mat-form-field class="example-full-width filter-field" hintLabel="Max 3 characters">
                             <mat-label>to currency</mat-label>
-                            <input matInput #input maxlength="3" placeholder="AUD" formControlName="to">
+                            <input matInput [matAutocomplete]="to" #input maxlength="3" placeholder="AUD" formControlName="to">
                             <mat-hint align="end">{{input.value.length}}/3</mat-hint>
+                            <mat-autocomplete #to="matAutocomplete">
+                                <mat-option *ngFor="let option of toSearchFilteredOptions | async" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
                         </mat-form-field>
                     </div>
                     <div>

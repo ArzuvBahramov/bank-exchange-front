@@ -11,7 +11,7 @@ import {Subject, takeUntil} from "rxjs";
 })
 export class AppComponent implements OnInit, OnDestroy {
   user!: User;
-  private destroy$: Subject<void> = new Subject<void>();
+  destroy$: Subject<void> = new Subject<void>();
 
   constructor(private authService: AuthDataService) {
   }

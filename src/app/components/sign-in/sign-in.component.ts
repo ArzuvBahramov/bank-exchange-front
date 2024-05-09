@@ -17,7 +17,7 @@ import {error} from "@angular/compiler-cli/src/transformers/util";
 export class SignInComponent implements OnInit, OnDestroy {
   signInForm!: FormGroup;
   isNotValidCredentials!: boolean;
-  private destroy$!: Subject<void>;
+  destroy$: Subject<void> = new Subject<void>();
 
   ngOnInit(): void {
     this.signInForm = this.fb.group({
@@ -25,7 +25,7 @@ export class SignInComponent implements OnInit, OnDestroy {
       password: new FormControl('', [Validators.required])
     });
     this.isNotValidCredentials = false;
-    this.destroy$ = new Subject<void>();
+
   }
 
   constructor(private fb: FormBuilder,
