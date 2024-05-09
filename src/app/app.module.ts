@@ -28,6 +28,16 @@ import { BankComponent } from './components/bank/bank.component';
 import {MatIcon} from "@angular/material/icon";
 import {MatToolbar} from "@angular/material/toolbar";
 import {MatPaginator} from "@angular/material/paginator";
+import {MatDrawer, MatDrawerContainer, MatDrawerContent} from "@angular/material/sidenav";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {
+    MatDatepicker,
+    MatDatepickerInput,
+    MatDatepickerModule,
+    MatDatepickerToggle
+} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
+import {DatePipe} from "@angular/common";
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -62,11 +72,23 @@ import {MatPaginator} from "@angular/material/paginator";
         MatRowDef,
         MatIcon,
         MatToolbar,
-        MatPaginator
+        MatPaginator,
+        MatDrawer,
+        MatDrawerContainer,
+        MatDrawerContent,
+        MatTabGroup,
+        MatTab,
+        MatDatepickerToggle,
+        MatDatepickerInput,
+        MatDatepicker,
+        MatDatepickerModule,
+        MatNativeDateModule
     ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    MatDatepickerModule,
+    DatePipe
   ]
 })
 export class AppModule { }
