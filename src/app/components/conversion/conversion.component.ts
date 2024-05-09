@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ConversionService} from "../../services/data/conversion/conversion.service";
 import {ConversionRequest} from "../../model/request/conversion.request";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
@@ -7,23 +7,27 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {ConversionFilterRequest} from "../../model/request/conversion.filter.request";
 import {DatePipe} from "@angular/common";
+import {Subject, takeUntil} from "rxjs";
 
 @Component({
   selector: 'app-conversion',
   templateUrl: './conversion.component.html',
-  styleUrl: './conversion.component.css'
+  styleUrl: './conversion.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConversionComponent implements OnInit{
+export class ConversionComponent implements OnInit, OnDestroy{
   formConversionRequest!: FormGroup;
   filterRequest!: FormGroup;
   isNotValidData: boolean = false;
   isHistoryTableAvailable: boolean = false;
   displayedColumns: string[] = ['index', 'fromConversion', 'toConversion', 'fromValue', 'toValue', 'rateDate', 'user', 'createAt']
   dataSource = new MatTableDataSource<Conversion>([]);
+  private destroy$!: Subject<void>;
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
 
   ngOnInit(): void {
+    this.destroy$ = new Subject<void>();
     this.formConversionRequest = this.fb.group({
       currencyFrom: new FormControl('', [Validators.required]),
       currencyTo: new FormControl('', [Validators.required]),
@@ -51,15 +55,8 @@ export class ConversionComponent implements OnInit{
         fromValue: Number.parseFloat(this.formConversionRequest.get('fromValue')?.value)
       };
 
-      this.conversionService.convert(conversionRequest).subscribe({
-        next: (response) => {
-          let result = response.toValue;
-          this.formConversionRequest.get('toValue')?.setValue(result);
-        },
-        error: (err) => {
-          // console.log(err);
-        }
-      })
+      this.conversionService.convert(conversionRequest).pipe(takeUntil(this.destroy$))
+          .subscribe((response) => this.formConversionRequest.get('toValue')?.setValue(response.toValue))
     }
   }
 
@@ -73,11 +70,12 @@ export class ConversionComponent implements OnInit{
   }
 
   loadHistory(page: number, size: number, filterRequest?: ConversionFilterRequest) {
-    this.conversionService.getHistoryConversions({ page: page, size: size }, filterRequest).subscribe(data => {
-      this.dataSource.data = data.content;
-      if (this.paginator) {
-        this.paginator.length = data.totalElements;
-      }
+    this.conversionService.getHistoryConversions({ page: page, size: size }, filterRequest).pipe(takeUntil(this.destroy$))
+        .subscribe((data) => {
+            this.dataSource.data = data.content;
+            if (this.paginator) {
+              this.paginator.length = data.totalElements;
+            }
     });
   }
 
@@ -103,5 +101,10 @@ export class ConversionComponent implements OnInit{
 
   changePage(event: PageEvent) {
     this.loadHistory(event.pageIndex, event.pageSize, this.getFilterAttributes())
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
