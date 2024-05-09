@@ -1,10 +1,10 @@
 <div class="component">
     <mat-tab-group>
-        <mat-tab label="Converter">
-            <app-conversion />
-        </mat-tab>
         <mat-tab label="Exchange rates">
-            <app-exchange-rate />
+            <app-exchange-rate (exchangeRateCodes)="exchangeRateCodesEvent($event)"/>
+        </mat-tab>
+        <mat-tab label="Converter">
+            <app-conversion [exchangeRateData]="exchangeRateCodesData"/>
         </mat-tab>
     </mat-tab-group>
 </div>

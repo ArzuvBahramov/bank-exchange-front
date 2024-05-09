@@ -15,7 +15,7 @@ import {Subject, takeUntil} from "rxjs";
 export class SignUpComponent implements OnInit, OnDestroy  {
   signUpForm!: FormGroup;
   isNotValidCredentials: boolean = false;
-  private destroy$!: Subject<void>;
+  destroy$: Subject<void> = new Subject<void>();
 
   ngOnInit() {
     this.signUpForm = this.fb.group({
@@ -25,7 +25,7 @@ export class SignUpComponent implements OnInit, OnDestroy  {
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required])
     });
-    this.destroy$ = new Subject<void>();
+
   }
 
   constructor(private fb: FormBuilder,

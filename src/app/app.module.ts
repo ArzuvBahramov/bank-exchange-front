@@ -38,6 +38,8 @@ import {
 } from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {DatePipe} from "@angular/common";
+import {MatAutocomplete, MatAutocompleteTrigger} from "@angular/material/autocomplete";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -47,7 +49,7 @@ import {DatePipe} from "@angular/common";
     SignUpComponent,
     ExchangeRateComponent,
     ConversionComponent,
-    BankComponent,
+    BankComponent
   ],
     imports: [
         HttpClientModule,
@@ -82,7 +84,10 @@ import {DatePipe} from "@angular/common";
         MatDatepickerInput,
         MatDatepicker,
         MatDatepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
+        MatAutocompleteTrigger,
+        MatAutocomplete,
+        MatSelectModule
     ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

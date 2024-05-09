@@ -1,4 +1,13 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {ConversionService} from "../../services/data/conversion/conversion.service";
 import {ConversionRequest} from "../../model/request/conversion.request";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
@@ -7,7 +16,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {ConversionFilterRequest} from "../../model/request/conversion.filter.request";
 import {DatePipe} from "@angular/common";
-import {Subject, takeUntil} from "rxjs";
+import {map, Observable, of, startWith, Subject, takeUntil} from "rxjs";
 
 @Component({
   selector: 'app-conversion',
@@ -15,28 +24,37 @@ import {Subject, takeUntil} from "rxjs";
   styleUrl: './conversion.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConversionComponent implements OnInit, OnDestroy{
+export class ConversionComponent implements OnInit, OnChanges, OnDestroy{
   formConversionRequest!: FormGroup;
   filterRequest!: FormGroup;
+  fromReqControl = new FormControl('', [Validators.required]);
+  fromReqFilteredOptions!: Observable<string[]>;
+  toReqControl = new FormControl('', [Validators.required]);
+  toReqFilteredOptions!: Observable<string[]>;
+  fromSearchControl = new FormControl('');
+  fromSearchFilteredOptions!: Observable<string[]>;
+  toSearchControl = new FormControl('');
+  toSearchFilteredOptions!: Observable<string[]>;
+
   isNotValidData: boolean = false;
   isHistoryTableAvailable: boolean = false;
   displayedColumns: string[] = ['index', 'fromConversion', 'toConversion', 'fromValue', 'toValue', 'rateDate', 'user', 'createAt']
   dataSource = new MatTableDataSource<Conversion>([]);
-  private destroy$!: Subject<void>;
+  @Input() exchangeRateData: string[] = [];
+  destroy$: Subject<void> = new Subject<void>();
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
 
   ngOnInit(): void {
-    this.destroy$ = new Subject<void>();
     this.formConversionRequest = this.fb.group({
-      currencyFrom: new FormControl('', [Validators.required]),
-      currencyTo: new FormControl('', [Validators.required]),
+      currencyFrom: this.fromReqControl,
+      currencyTo: this.toReqControl,
       fromValue: new FormControl('', [Validators.required]),
       toValue: new FormControl('')
     });
     this.filterRequest = this.fb.group({
-      from: new FormControl(''),
-      to: new FormControl(''),
+      from: this.fromSearchControl,
+      to: this.toSearchControl,
       username: new FormControl(''),
       requestData: new FormControl(''),
     });
@@ -106,5 +124,47 @@ export class ConversionComponent implements OnInit, OnDestroy{
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.exchangeRateData.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('exchangeRateData' in changes) {
+      this.autoCompleteSelectorField();
+    }
+  }
+
+  autoCompleteSelectorField() {
+    this.toReqFilteredOptions = of(this.exchangeRateData).pipe(
+        map(data => data)
+    );
+    this.toReqFilteredOptions = this.toReqControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value || '')),
+    );
+    this.fromReqFilteredOptions = of(this.exchangeRateData).pipe(
+        map(data => data)
+    );
+    this.fromReqFilteredOptions = this.fromReqControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value || '')),
+    );
+    this.fromSearchFilteredOptions = of(this.exchangeRateData).pipe(
+        map(data => data)
+    );
+    this.fromSearchFilteredOptions = this.fromSearchControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value || '')),
+    );
+    this.toSearchFilteredOptions = of(this.exchangeRateData).pipe(
+        map(data => data)
+    );
+    this.toSearchFilteredOptions = this.toSearchControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value || '')),
+    );
   }
 }

@@ -1,8 +1,9 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ExchangeRate} from "../../model/exchange-rate.model";
 import {ExchangeRateService} from "../../services/data/exchange-rate/exchange-rate.service";
-import {error} from "@angular/compiler-cli/src/transformers/util";
 import {Subject, takeUntil} from "rxjs";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-exchange-rate',
@@ -12,8 +13,10 @@ import {Subject, takeUntil} from "rxjs";
 })
 export class ExchangeRateComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['index', 'code', 'rate', 'rate_date'];
-  dataSource!: ExchangeRate[];
+  dataSource = new MatTableDataSource<ExchangeRate>([]);
   private destroy$!: Subject<void>;
+  @Output() exchangeRateCodes = new EventEmitter<string[]>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {
     this.destroy$ = new Subject<void>();
@@ -25,8 +28,10 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
   loadData() {
     this.exchangeRateService.getExchangers().pipe(takeUntil(this.destroy$)).subscribe(
         (response) => {
-          this.dataSource = Array.from(response)
-          console.log(this.dataSource);
+          let data = Array.from(response);
+          this.dataSource.data = data;
+          this.exchangeRateCodes.emit(data.map((exchange) => exchange.code));
+          this.dataSource.paginator = this.paginator;
         });
   }
 
