@@ -1,38 +1,41 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {User} from "./model/user.model";
 import {AuthDataService} from "./services/data/auth/auth-data.service";
+import {Subject, takeUntil} from "rxjs";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit{
-  user: User;
+export class AppComponent implements OnInit, OnDestroy {
+  user!: User;
+  private destroy$: Subject<void> = new Subject<void>();
 
   constructor(private authService: AuthDataService) {
-    this.user = {
-      id: 0,
-      firstname: '',
-      lastname: '',
-      username: '',
-      email: ''
-    }
   }
 
   loadUserDetails() {
-    this.authService.getDetails().subscribe({
-      next: (response) => {
-        this.user = response;
-      },
-      error: (err) => {
-        console.log(err);
-        throw (err);
-      }
-    });
+    this.authService.getDetails().pipe(takeUntil(this.destroy$))
+        .subscribe((user) => this.user = user ?? this.DEFAULT_USER_CREDENTIALS)
   }
 
   ngOnInit(): void {
+    this.user = this.DEFAULT_USER_CREDENTIALS;
     this.loadUserDetails();
+  }
+
+  DEFAULT_USER_CREDENTIALS = {
+    id: 0,
+    firstname: '',
+    lastname: '',
+    username: 'USERNAME',
+    email: ''
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
