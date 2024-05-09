@@ -9,4 +9,5 @@ export interface Conversion {
   toValue: number;
   rateDate: string;
   user: User;
+  createdAt: Date
 }

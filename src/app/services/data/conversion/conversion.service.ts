@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {environment} from "../../../../envirement/envirement";
 import {Conversion} from "../../../model/conversion.model";
 import {ConversionRequest} from "../../../model/request/conversion.request";
+import {ConversionFilterRequest} from "../../../model/request/conversion.filter.request";
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +18,10 @@ export class ConversionService {
     return this.http.post<Conversion>(`${this.apiUrl}/convert`, request);
   }
 
-  getHistoryConversions(id: number, pageable: any): Observable<any> {
-    return this.http.get(`${this.apiUrl}/history/${id}`, { params: pageable });
+  getHistoryConversions(pageable: any,
+                        conversion?: ConversionFilterRequest): Observable<any> {
+    return this.http.get(`${this.apiUrl}/history?from=${conversion?.from || ''}&to=${conversion?.to || ''}&username=${conversion?.username || ''}&dateRequest=${conversion?.dateRequest || ''}`,
+        { params: pageable });
   }
 }
 
