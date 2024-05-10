@@ -1,5 +1,5 @@
 export interface ConversionRequest {
-  currencyFro: string,
+  currencyFrom: string,
   currencyTo: string,
   fromValue: number
 }

@@ -15,7 +15,7 @@ import {Conversion} from "../../model/conversion.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {ConversionFilterRequest} from "../../model/request/conversion.filter.request";
-import {DatePipe} from "@angular/common";
+import {DatePipe, formatNumber} from "@angular/common";
 import {map, Observable, of, startWith, Subject, takeUntil} from "rxjs";
 
 @Component({
@@ -27,36 +27,32 @@ import {map, Observable, of, startWith, Subject, takeUntil} from "rxjs";
 export class ConversionComponent implements OnInit, OnChanges, OnDestroy{
   formConversionRequest!: FormGroup;
   filterRequest!: FormGroup;
-  fromReqControl = new FormControl('', [Validators.required]);
   fromReqFilteredOptions!: Observable<string[]>;
-  toReqControl = new FormControl('', [Validators.required]);
   toReqFilteredOptions!: Observable<string[]>;
-  fromSearchControl = new FormControl('');
   fromSearchFilteredOptions!: Observable<string[]>;
-  toSearchControl = new FormControl('');
   toSearchFilteredOptions!: Observable<string[]>;
 
-  isNotValidData: boolean = false;
   isHistoryTableAvailable: boolean = false;
   displayedColumns: string[] = ['index', 'fromConversion', 'toConversion', 'fromValue', 'toValue', 'rateDate', 'user', 'createAt']
   dataSource = new MatTableDataSource<Conversion>([]);
   @Input() exchangeRateData: string[] = [];
-  destroy$: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject<void>();
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
+  convertedValue?: number = 0.000;
 
   ngOnInit(): void {
     this.formConversionRequest = this.fb.group({
-      currencyFrom: this.fromReqControl,
-      currencyTo: this.toReqControl,
+      currencyFrom: new FormControl('', [Validators.required]),
+      currencyTo: new FormControl('', [Validators.required]),
       fromValue: new FormControl('', [Validators.required]),
       toValue: new FormControl('')
     });
     this.filterRequest = this.fb.group({
-      from: this.fromSearchControl,
-      to: this.toSearchControl,
+      from: new FormControl(''),
+      to: new FormControl(''),
       username: new FormControl(''),
-      requestData: new FormControl(''),
+      dateRequest: new FormControl(''),
     });
   }
 
@@ -67,15 +63,19 @@ export class ConversionComponent implements OnInit, OnChanges, OnDestroy{
 
   onSubmit() {
     if (this.formConversionRequest.valid) {
-      const conversionRequest: ConversionRequest = {
-        currencyFro: this.formConversionRequest.get('currencyFrom')?.value,
-        currencyTo: this.formConversionRequest.get('currencyTo')?.value,
-        fromValue: Number.parseFloat(this.formConversionRequest.get('fromValue')?.value)
-      };
-
+      const conversionRequest = this.getConversionRequest();
       this.conversionService.convert(conversionRequest).pipe(takeUntil(this.destroy$))
           .subscribe((response) => this.formConversionRequest.get('toValue')?.setValue(response.toValue))
     }
+  }
+
+  private getConversionRequest() {
+    const conversionRequest: ConversionRequest = {
+      currencyFrom: this.formConversionRequest.get('currencyFrom')?.value,
+      currencyTo: this.formConversionRequest.get('currencyTo')?.value,
+      fromValue: Number.parseFloat(this.formConversionRequest.get('fromValue')?.value)
+    };
+    return conversionRequest;
   }
 
   showHistory() {
@@ -104,12 +104,7 @@ export class ConversionComponent implements OnInit, OnChanges, OnDestroy{
   }
 
   getFilterAttributes():ConversionFilterRequest {
-    var filterConversionRequest: ConversionFilterRequest = {
-      from: this.filterRequest.get('from')?.value || '',
-      to: this.filterRequest.get('to')?.value || '',
-      username: this.filterRequest.get('username')?.value || '',
-      dateRequest: this.filterRequest.get('requestData')?.value || '',
-    }
+    var filterConversionRequest: ConversionFilterRequest = this.filterRequest.getRawValue();
     if (filterConversionRequest.dateRequest) {
       filterConversionRequest.dateRequest = this.formatDate.transform(filterConversionRequest.dateRequest, 'yyyy-MM-dd') || '';
     }
@@ -138,31 +133,31 @@ export class ConversionComponent implements OnInit, OnChanges, OnDestroy{
   }
 
   autoCompleteSelectorField() {
-    this.toReqFilteredOptions = of(this.exchangeRateData).pipe(
-        map(data => data)
-    );
-    this.toReqFilteredOptions = this.toReqControl.valueChanges.pipe(
-        startWith(''),
-        map(value => this._filter(value || '')),
-    );
     this.fromReqFilteredOptions = of(this.exchangeRateData).pipe(
         map(data => data)
     );
-    this.fromReqFilteredOptions = this.fromReqControl.valueChanges.pipe(
+    this.fromReqFilteredOptions = this.formConversionRequest.controls['currencyFrom']?.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value || '')),
+    );
+    this.toReqFilteredOptions = of(this.exchangeRateData).pipe(
+        map(data => data)
+    );
+    this.toReqFilteredOptions = this.formConversionRequest.controls['currencyTo']?.valueChanges.pipe(
         startWith(''),
         map(value => this._filter(value || '')),
     );
     this.fromSearchFilteredOptions = of(this.exchangeRateData).pipe(
         map(data => data)
     );
-    this.fromSearchFilteredOptions = this.fromSearchControl.valueChanges.pipe(
+    this.fromSearchFilteredOptions = this.filterRequest.controls['from']?.valueChanges.pipe(
         startWith(''),
         map(value => this._filter(value || '')),
     );
     this.toSearchFilteredOptions = of(this.exchangeRateData).pipe(
         map(data => data)
     );
-    this.toSearchFilteredOptions = this.toSearchControl.valueChanges.pipe(
+    this.toSearchFilteredOptions = this.filterRequest.controls['to']?.valueChanges.pipe(
         startWith(''),
         map(value => this._filter(value || '')),
     );

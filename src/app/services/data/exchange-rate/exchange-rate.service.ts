@@ -9,7 +9,7 @@ import {environment} from "../../../../envirement/envirement";
 })
 export class ExchangeRateService {
 
-  private apiUrl = `${environment.apiUrl}${environment.prefix}/exchanger`;
+  private apiUrl = `${environment.apiUrl}${environment.prefix}/exchangers`;
 
   constructor(private http: HttpClient) { }
 

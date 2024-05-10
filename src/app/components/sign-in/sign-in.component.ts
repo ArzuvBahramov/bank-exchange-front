@@ -17,7 +17,7 @@ import {error} from "@angular/compiler-cli/src/transformers/util";
 export class SignInComponent implements OnInit, OnDestroy {
   signInForm!: FormGroup;
   isNotValidCredentials!: boolean;
-  destroy$: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject<void>();
 
   ngOnInit(): void {
     this.signInForm = this.fb.group({
@@ -38,16 +38,14 @@ export class SignInComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     if (this.signInForm.valid) {
-      const loginRequest: LoginRequest = {
-        username: this.signInForm.get('username')?.value,
-        password: this.signInForm.get('password')?.value
-      };
-      this.authDataService.signIn(loginRequest).pipe(takeUntil(this.destroy$)).subscribe(
+      this.authDataService.signIn(this.signInForm.getRawValue()).pipe(takeUntil(this.destroy$)).subscribe(
         (response) =>  {
           this.authService.login(response);
           this.app.loadUserDetails();
           this.router.navigate(['/app'])
-        }
+        }, (error) => {
+            this.isNotValidCredentials = true
+          }
       );
     }
   }

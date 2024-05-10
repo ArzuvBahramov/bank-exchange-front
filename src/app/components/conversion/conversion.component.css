@@ -50,3 +50,9 @@ mat-form-field {
 .filter-component {
     min-height: 450px;
 }
+
+.example-card {
+    max-width: 120px;
+    max-height: 58px;
+}
+

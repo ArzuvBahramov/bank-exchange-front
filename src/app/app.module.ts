@@ -9,7 +9,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SignInComponent} from "./components/sign-in/sign-in.component";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import {MatCard, MatCardContent} from "@angular/material/card";
+import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./services/interceptor/auth.interceptor";
 import { SignUpComponent } from './components/sign-up/sign-up.component';
@@ -87,7 +87,10 @@ import {MatSelectModule} from "@angular/material/select";
         MatNativeDateModule,
         MatAutocompleteTrigger,
         MatAutocomplete,
-        MatSelectModule
+        MatSelectModule,
+        MatCardSubtitle,
+        MatCardTitle,
+        MatCardHeader
     ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
