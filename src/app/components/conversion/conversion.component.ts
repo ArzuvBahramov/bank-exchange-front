@@ -162,6 +162,4 @@ export class ConversionComponent implements OnInit, OnChanges, OnDestroy{
         map(value => this._filter(value || '')),
     );
   }
-
-  protected readonly formatNumber = formatNumber;
 }
