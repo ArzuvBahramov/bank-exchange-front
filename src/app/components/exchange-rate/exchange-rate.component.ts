@@ -15,7 +15,7 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['index', 'code', 'rate', 'rate_date'];
   dataSource = new MatTableDataSource<ExchangeRate>([]);
   private destroy$!: Subject<void>;
-  @Output() exchangeRateCodes = new EventEmitter<string[]>;
+  @Output() private exchangeRateCodes = new EventEmitter<string[]>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {

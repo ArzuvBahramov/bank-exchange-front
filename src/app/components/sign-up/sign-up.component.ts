@@ -15,7 +15,7 @@ import {Subject, takeUntil} from "rxjs";
 export class SignUpComponent implements OnInit, OnDestroy  {
   signUpForm!: FormGroup;
   isNotValidCredentials: boolean = false;
-  destroy$: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject<void>();
 
   ngOnInit() {
     this.signUpForm = this.fb.group({
@@ -36,13 +36,7 @@ export class SignUpComponent implements OnInit, OnDestroy  {
 
   onSubmit() {
     if (this.signUpForm.valid) {
-      const registerRequest: RegisterRequest = {
-        firstname: this.signUpForm.get('firstname')?.value,
-        lastname: this.signUpForm.get('lastname')?.value,
-        username: this.signUpForm.get('username')?.value,
-        email: this.signUpForm.get('email')?.value,
-        password: this.signUpForm.get('password')?.value,
-      };
+      const registerRequest: RegisterRequest = this.signUpForm.getRawValue();
       this.authDataService.signUp(registerRequest).pipe(takeUntil(this.destroy$)).subscribe(
           (response) => this.router.navigate(['/sign-in']));
     }
